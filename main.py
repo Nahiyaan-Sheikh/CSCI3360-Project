@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import matplotlib as mp
+import matplotlib.pyplot as plt
 
 gpu_df = pd.read_csv('./gpu/FACT_GPU_PRICE.csv')
 
@@ -30,4 +30,7 @@ frames = [datarx, data960, data970_80, data10, datatitan]
 gpu_final = pd.concat(frames)
 
 print(gpu_final)
+
+
+
 
