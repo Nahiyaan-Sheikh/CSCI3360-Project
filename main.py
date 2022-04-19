@@ -10,21 +10,26 @@ to_drop = ['RegionId', 'MerchantId']
 gpu_df.drop(to_drop, inplace=True, axis=1)
 
 
-# drop unused rows
+# drop unused rows and round values
 datarx = gpu_df[gpu_df['ProdId'] >= 893]
 datarx = datarx[datarx['ProdId'] <= 945]
+datarx = datarx.round(1)
 
 data960 = gpu_df[gpu_df['ProdId'] >= 1879]
 data960 = data960[data960['ProdId'] <= 1898]
+data960 = data960.round(1)
 
 data970_80 = gpu_df[gpu_df['ProdId'] >= 1907]
 data970_80 = data970_80[data970_80['ProdId'] <= 1948]
+data970_80 = data970_80.round(1)
 
 data10 = gpu_df[gpu_df['ProdId'] >= 995]
 data10 = data10[data10['ProdId'] <= 1108]
+data10 = data10.round(1)
 
 datatitan = gpu_df[gpu_df['ProdId'] >= 1960]
 datatitan = datatitan[datatitan['ProdId'] <= 1975]
+datatitan = datatitan.round(1)
 
 # combines all dataframes, gpu_final is the correct df with gpus we are using
 frames = [datarx, data960, data970_80, data10, datatitan]
@@ -61,7 +66,7 @@ print('Eth max date: ', eth_df['Date'].max())
 print('Ltc min date: ', ltc_df['Date'].min())
 print('Ltc max date: ', ltc_df['Date'].max())
 
-# drop cpryto rows that are outside of gpu dates
+# drop crypto rows that are outside of gpu dates
 dataBTC = btc_df[btc_df['Date'] >= 'Sep 19, 2014']
 dataBTC = dataBTC[dataBTC['Date'] <= 'Mar 16, 2018']
 
@@ -74,17 +79,12 @@ dataLTC = dataLTC[dataLTC['Date'] <= 'Mar 16, 2018']
 
 # calculate means and correlations
 arr_gpu = np.array(gpu_final)
+np.round(arr_gpu, 1)
 arr_btc = np.array(dataBTC)
 arr_eth = np.array(dataETH)
 arr_ltc = np.array(dataLTC)
 
-print('')
-print(arr_gpu)
-print('')
-print(arr_btc)
 
-#corr_gpu_btc = np.corrcoef(arr_gpu[:,2].astype('float'), arr_btc[:,1])
-#print(corr_gpu_btc)
 
 
 
