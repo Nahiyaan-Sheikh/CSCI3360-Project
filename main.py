@@ -56,9 +56,6 @@ ltc_df.drop(drop, inplace=True, axis=1)
 ltc_df['Date'] = pd.to_datetime(ltc_df['Date'])
 ltc_df['Change %'] = ltc_df['Change %'].str.replace('%', '')
 
-print(datarx)
-print(ltc_df)
-
 print("rx min " + str(datarx['TimeId'].min()))
 print("rx max " + str(datarx['TimeId'].max()))
 print("960 min " + str(data960['TimeId'].min()))
@@ -101,11 +98,39 @@ reg_btc_df['date'] = dataBTC['Date']
 reg_btc_df['btc_price'] = dataBTC['Price']
 
 meanrx = datarx.sort_values('TimeId', ascending=False)
-#meanrx = meanrx.groupby('TimeId').mean()
-print(meanrx.dtypes)
-meanrx = meanrx[meanrx['TimeId'] >= 20160314]
-meanrx = meanrx[meanrx['TimeId'] <= 20180101]
+meanrx = meanrx[meanrx['TimeId'] >= 20160824]
+meanrx = meanrx[meanrx['TimeId'] <= 20180315]
+meanrx = meanrx.groupby('TimeId').mean()
+print('meanrx: ')
 print(meanrx)
+
+mean960 = data960.sort_values('TimeId', ascending=False)
+mean960 = mean960[mean960['TimeId'] >= 20160824]
+mean960 = mean960[mean960['TimeId'] <= 20180315]
+mean960 = mean960.groupby('TimeId').mean()
+print('mean960: ')
+print(mean960)
+
+mean970_980 = data970_80.sort_values('TimeId', ascending=False)
+mean970_980 = mean970_980[mean970_980['TimeId'] >= 20160824]
+mean970_980 = mean970_980[mean970_980['TimeId'] <= 20180315]
+mean970_980 = mean970_980.groupby('TimeId').mean()
+print('mean970_980: ')
+print(mean970_980)
+
+mean10 = data10.sort_values('TimeId', ascending=False)
+mean10 = mean10[mean10['TimeId'] >= 20160824]
+mean10 = mean10[mean10['TimeId'] <= 20180315]
+mean10 = mean10.groupby('TimeId').mean()
+print('mean10: ')
+print(mean10)
+
+meantitan = datatitan.sort_values('TimeId', ascending=False)
+meantitan = meantitan[meantitan['TimeId'] >= 20160824]
+meantitan = meantitan[meantitan['TimeId'] <= 20180315]
+meantitan = meantitan.groupby('TimeId').mean()
+print('meantitan: ')
+print(meantitan)
 
 #print(reg_btc_df)
 
