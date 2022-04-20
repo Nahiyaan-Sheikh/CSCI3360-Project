@@ -35,7 +35,7 @@ datatitan = datatitan.round(1)
 frames = [datarx, data960, data970_80, data10, datatitan]
 gpu_final = pd.concat(frames)
 
-#print(gpu_final)
+# print(gpu_final)
 
 # load crypto data
 btc_df = pd.read_csv('./crypto/Bitcoin_Historical_Data.csv')
@@ -66,7 +66,7 @@ print('Eth max date: ', eth_df['Date'].max())
 print('Ltc min date: ', ltc_df['Date'].min())
 print('Ltc max date: ', ltc_df['Date'].max())
 
-# drop crypto rows that are outside of gpu dates
+# drop crypto rows that are outside gpu dates
 dataBTC = btc_df[btc_df['Date'] >= 'Sep 19, 2014']
 dataBTC = dataBTC[dataBTC['Date'] <= 'Mar 16, 2018']
 
@@ -77,15 +77,23 @@ dataLTC = ltc_df[ltc_df['Date'] >= 'Sep 19, 2014']
 dataLTC = dataLTC[dataLTC['Date'] <= 'Mar 16, 2018']
 
 
-# calculate means and correlations
-arr_gpu = np.array(gpu_final)
-np.round(arr_gpu, 1)
-arr_btc = np.array(dataBTC)
-arr_eth = np.array(dataETH)
-arr_ltc = np.array(dataLTC)
+# create new dataframes for linear regression
+reg_btc_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
+                                   '970_980_price', '10_price', 'titan_price', 'btc_price'])
+reg_eth_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
+                                   '970_980_price', '10_price', 'titan_price', 'eth_price'])
+reg_ltc_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
+                                   '970_980_price', '10_price', 'titan_price', 'ltc_price'])
 
+reg_btc_df['date'] = dataBTC['Date']
+reg_btc_df['btc_price'] = dataBTC['Price']
 
+reg_eth_df['date'] = dataETH['Date']
+reg_eth_df['eth_price'] = dataETH['Price']
 
+reg_ltc_df['date'] = dataLTC['Date']
+reg_ltc_df['ltc_price'] = dataLTC['Price']
 
-
-
+print(reg_btc_df)
+print(reg_eth_df)
+print(reg_ltc_df)
