@@ -56,7 +56,19 @@ ltc_df.drop(drop, inplace=True, axis=1)
 ltc_df['Date'] = pd.to_datetime(ltc_df['Date'])
 ltc_df['Change %'] = ltc_df['Change %'].str.replace('%', '')
 
-print('')
+print(datarx)
+print(ltc_df)
+
+print("rx min " + str(datarx['TimeId'].min()))
+print("rx max " + str(datarx['TimeId'].max()))
+print("960 min " + str(data960['TimeId'].min()))
+print("960 max " + str(data960['TimeId'].max()))
+print("970-980 min " + str(data970_80['TimeId'].min()))
+print("970-980 max " + str(data970_80['TimeId'].max()))
+print("10 min " + str(data10['TimeId'].min()))
+print("10 max " + str(data10['TimeId'].max()))
+print("titan min " + str(datatitan['TimeId'].min()))
+print("titan max " + str(datatitan['TimeId'].max()))
 print('GPU min date: ', gpu_final['TimeId'].min())
 print('GPU max date: ', gpu_final['TimeId'].max())
 print('Btc min date: ', btc_df['Date'].min())
@@ -87,11 +99,15 @@ reg_ltc_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
 
 reg_btc_df['date'] = dataBTC['Date']
 reg_btc_df['btc_price'] = dataBTC['Price']
-print(datarx)
-#meanrx = datarx.sort_values('TimeId', ascending=False)
-#reg_btc_df['rx_price'] = meanrx.groupby('TimeId').mean()
 
-print(reg_btc_df)
+meanrx = datarx.sort_values('TimeId', ascending=False)
+#meanrx = meanrx.groupby('TimeId').mean()
+print(meanrx.dtypes)
+meanrx = meanrx[meanrx['TimeId'] >= 20160314]
+meanrx = meanrx[meanrx['TimeId'] <= 20180101]
+print(meanrx)
+
+#print(reg_btc_df)
 
 reg_eth_df['date'] = dataETH['Date']
 reg_eth_df['eth_price'] = dataETH['Price']
