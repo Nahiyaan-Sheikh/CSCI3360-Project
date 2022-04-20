@@ -78,6 +78,13 @@ dataLTC = dataLTC[dataLTC['Date'] <= 'Mar 16, 2018']
 
 
 # create new dataframes for linear regression
+reg_gpu_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
+                                   '970_980_price', '10_price', 'titan_price'])
+reg_gpu_df['date'] = gpu_final['TimeId']
+reg_gpu_df = reg_gpu_df.drop_duplicates()
+reg_gpu_df = reg_gpu_df.sort_values('date', ascending=False)
+
+
 reg_btc_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
                                    '970_980_price', '10_price', 'titan_price', 'btc_price'])
 reg_eth_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
@@ -94,6 +101,3 @@ reg_eth_df['eth_price'] = dataETH['Price']
 reg_ltc_df['date'] = dataLTC['Date']
 reg_ltc_df['ltc_price'] = dataLTC['Price']
 
-print(reg_btc_df)
-print(reg_eth_df)
-print(reg_ltc_df)
