@@ -98,7 +98,6 @@ dataLTC = dataLTC[dataLTC['Date'] <= 'Mar 16, 2018']
 dataLTC = dataLTC.sort_values(by=['Date'])
 dataLTC = dataLTC.reset_index()
 
-
 # method for making graphs of dataframes
 def makegraph(dataframe, cardname):
     dataframe['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in dataframe['TimeId'].to_list()])
@@ -111,7 +110,6 @@ def makegraph(dataframe, cardname):
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
     ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
     plt.show()
-
 
 # create dataframes of individual gpus and plot price over time
 
@@ -315,6 +313,31 @@ reg_df['ltc_price'] = dataLTC['Price']
 print("Final dataframe")
 print(reg_df)
 
+# Visualization of Titan Card with ETH Price
+fig, ax = plt.subplots()
+reg_df['eth_price'] = reg_df['eth_price'].astype(float)
+ax.plot(reg_df['date'],reg_df['titan_price'])
+ax.tick_params(axis='y')
+ax2 = ax.twinx()
+ax2.set_ylabel('eth Price')
+ax2.plot(reg_df['date'],reg_df['eth_price'], color="red")
+ax2.tick_params(axis='y')
+ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=1))
+plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
+ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+plt.tight_layout()
+fig.tight_layout()
+plt.show()
+
+fig1, ax1 = plt.subplots()
+reg_df['eth_price'] = reg_df['eth_price'].astype(float)
+ax1.plot(reg_df['date'],reg_df['eth_price'])
+ax1.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=1))
+plt.setp(ax1.xaxis.get_majorticklabels(), rotation=90)
+ax1.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+plt.show()
+
+
 # data splitting
 converted_data = reg_df[['rx_560_price', 'rx_570_price', 'rx_580_price', 'vega_56_price', 'vega_64_price',
                                    '960_price', '970_price', '980_price', '980ti_price', '1050_price', '1050ti_price',
@@ -349,4 +372,3 @@ regLTC.fit(x_train3, y_train3)
 predLTC = regLTC.predict(x_test3)
 scoreLTC = regLTC.score(x_test3, y_test3)
 print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
-
