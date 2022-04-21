@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import datetime as dt
 
 # load grpu data
 gpu_df = pd.read_csv('./gpu/FACT_GPU_PRICE.csv')
@@ -100,30 +103,133 @@ reg_btc_df['btc_price'] = dataBTC['Price']
 meanrx = datarx.sort_values('TimeId', ascending=False)
 meanrx = meanrx[meanrx['TimeId'] >= 20160824]
 meanrx = meanrx[meanrx['TimeId'] <= 20180315]
-meanrx = meanrx.groupby('TimeId').mean()
-print('meanrx: ')
-print(meanrx)
+rx560 = meanrx[meanrx['ProdId'] >= 893]
+rx560 = meanrx[meanrx['ProdId'] <= 904]
+rx560 = rx560.groupby('TimeId').mean()
+print('rx560: ')
+print(rx560)
+
+rx570 = meanrx[meanrx['ProdId'] >= 905]
+rx570 = meanrx[meanrx['ProdId'] <= 916]
+rx570 = rx570.groupby('TimeId').mean()
+print('rx570: ')
+print(rx570)
+
+rx580 = meanrx[meanrx['ProdId'] >= 917]
+rx580 = meanrx[meanrx['ProdId'] <= 930]
+rx580 = rx580.groupby('TimeId').mean()
+print('rx580: ')
+print(rx580)
+
+vega56 = meanrx[meanrx['ProdId'] >= 931]
+vega56 = meanrx[meanrx['ProdId'] <= 936]
+vega56 = vega56.groupby('TimeId').mean()
+print('vega56: ')
+print(vega56)
+
+vega64 = meanrx[meanrx['ProdId'] >= 937]
+vega64 = meanrx[meanrx['ProdId'] <= 944]
+vega64 = vega64.groupby('TimeId').mean()
+print('vega64: ')
+print(vega64)
 
 mean960 = data960.sort_values('TimeId', ascending=False)
 mean960 = mean960[mean960['TimeId'] >= 20160824]
 mean960 = mean960[mean960['TimeId'] <= 20180315]
-mean960 = mean960.groupby('TimeId').mean()
+mean960 = mean960[mean960['ProdId'] >= 1879]
+mean960 = mean960[mean960['ProdId'] <= 1897]
 print('mean960: ')
 print(mean960)
+
+#date_fmt = '%Y%m%d'
+#mean960['TimeId'] = dt.datetime.strptime(mean960['TimeId'], '%Y%m%d')
+#dt_x = [dt.datetime.strptime(str(i), date_fmt) for i in mean960['TimeId']]
+#mean960['TimeId'] = dt.datetime.strptime(mean960['TimeId'], '%Y%m%d')
+mean960['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in mean960['TimeId'].to_list()])
+#mean960['TimeId'] = pd.to_datetime(mean960['TimeId'], format = '%Y%m%d')
+
+fig, ax = plt.subplots(figsize = (15,7))
+sns.lineplot(ax = ax, x=mean960['TimeId'], y = mean960['Price_USD'], data=mean960).set_title("GTX 960")
+ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday = 1))
+
+x_ticks = mean960['TimeId']
+plt.tick_params(axis='x', which='major')
+
+#plt.plot(mean960['TimeId'], mean960['Price_USD'])
+#monthyearFmt = mdates.DateFormatter('%y%m%d')
+#ax1.xaxis.set_major_formatter(monthyearFmt)
+_ = plt.xticks(rotation=90)
+plt.setp(ax.xaxis.get_majorticklabels(), rotation = 90)
+ax.xaxis.set_minor_locator(mdates.DayLocator(interval = 1))
+
+#meantitan.plot(kind='line', x = 'TimeId', y = 'Price_USD')
+plt.show()
 
 mean970_980 = data970_80.sort_values('TimeId', ascending=False)
 mean970_980 = mean970_980[mean970_980['TimeId'] >= 20160824]
 mean970_980 = mean970_980[mean970_980['TimeId'] <= 20180315]
-mean970_980 = mean970_980.groupby('TimeId').mean()
-print('mean970_980: ')
-print(mean970_980)
+mean970 = mean970_980[mean970_980['ProdId'] >= 1907]
+mean970 = mean970_980[mean970_980['ProdId'] <= 1919]
+mean970 = mean970.groupby('TimeId').mean()
+print('mean970: ')
+print(mean970)
+
+mean980 = mean970_980[mean970_980['ProdId'] >= 1920]
+mean980 = mean970_980[mean970_980['ProdId'] <= 1934]
+mean980 = mean980.groupby('TimeId').mean()
+print('mean980: ')
+print(mean980)
+
+mean980ti = mean970_980[mean970_980['ProdId'] >= 1935]
+mean980ti = mean970_980[mean970_980['ProdId'] <= 1947]
+mean980ti = mean980.groupby('TimeId').mean()
+print('mean980ti: ')
+print(mean980ti)
 
 mean10 = data10.sort_values('TimeId', ascending=False)
 mean10 = mean10[mean10['TimeId'] >= 20160824]
 mean10 = mean10[mean10['TimeId'] <= 20180315]
-mean10 = mean10.groupby('TimeId').mean()
-print('mean10: ')
-print(mean10)
+mean1050 = mean10[mean10['ProdId'] >= 995]
+mean1050 = mean10[mean10['ProdId'] <= 1006]
+mean1050 = mean1050.groupby('TimeId').mean()
+print('mean1050: ')
+print(mean1050)
+
+mean1050ti = mean10[mean10['ProdId'] >= 1007]
+mean1050ti = mean10[mean10['ProdId'] <= 1018]
+mean1050ti = mean1050ti.groupby('TimeId').mean()
+print('mean1050ti: ')
+print(mean1050ti)
+
+mean1060 = mean10[mean10['ProdId'] >= 1019]
+mean1060 = mean10[mean10['ProdId'] <= 1045]
+mean1060 = mean1060.groupby('TimeId').mean()
+print('mean1060: ')
+print(mean1060)
+
+mean1070 = mean10[mean10['ProdId'] >= 1046]
+mean1070 = mean10[mean10['ProdId'] <= 1060]
+mean1070 = mean1070.groupby('TimeId').mean()
+print('mean1070: ')
+print(mean1070)
+
+mean1070ti = mean10[mean10['ProdId'] >= 1061]
+mean1070ti = mean10[mean10['ProdId'] <= 1072]
+mean1070ti = mean1070ti.groupby('TimeId').mean()
+print('mean1070ti: ')
+print(mean1070ti)
+
+mean1080 = mean10[mean10['ProdId'] >= 1073]
+mean1080 = mean10[mean10['ProdId'] <= 1087]
+mean1080 = mean1080.groupby('TimeId').mean()
+print('mean1080: ')
+print(mean1080)
+
+mean1080ti = mean10[mean10['ProdId'] >= 1088]
+mean1080ti = mean10[mean10['ProdId'] <= 1107]
+mean1080ti = mean1080ti.groupby('TimeId').mean()
+print('mean1080ti: ')
+print(mean1080ti)
 
 meantitan = datatitan.sort_values('TimeId', ascending=False)
 meantitan = meantitan[meantitan['TimeId'] >= 20160824]
@@ -132,6 +238,12 @@ meantitan = meantitan.groupby('TimeId').mean()
 print('meantitan: ')
 print(meantitan)
 
+
+
+#meantitan.columns = meantitan.columns.str.strip()
+meantitan.plot(y = 'Price_USD', use_index=True)
+#meantitan.plot(kind='line', x = 'TimeId', y = 'Price_USD')
+plt.show()
 #print(reg_btc_df)
 
 reg_eth_df['date'] = dataETH['Date']
