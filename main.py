@@ -4,6 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import datetime as dt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -61,24 +63,24 @@ ltc_df.drop(drop, inplace=True, axis=1)
 ltc_df['Date'] = pd.to_datetime(ltc_df['Date'])
 ltc_df['Change %'] = ltc_df['Change %'].str.replace('%', '')
 
-print("rx min " + str(datarx['TimeId'].min()))
-print("rx max " + str(datarx['TimeId'].max()))
-print("960 min " + str(data960['TimeId'].min()))
-print("960 max " + str(data960['TimeId'].max()))
-print("970-980 min " + str(data970_80['TimeId'].min()))
-print("970-980 max " + str(data970_80['TimeId'].max()))
-print("10 min " + str(data10['TimeId'].min()))
-print("10 max " + str(data10['TimeId'].max()))
-print("titan min " + str(datatitan['TimeId'].min()))
-print("titan max " + str(datatitan['TimeId'].max()))
-print('GPU min date: ', gpu_final['TimeId'].min())
-print('GPU max date: ', gpu_final['TimeId'].max())
-print('Btc min date: ', btc_df['Date'].min())
-print('Btc max date: ', btc_df['Date'].max())
-print('Eth min date: ', eth_df['Date'].min())
-print('Eth max date: ', eth_df['Date'].max())
-print('Ltc min date: ', ltc_df['Date'].min())
-print('Ltc max date: ', ltc_df['Date'].max())
+#print("rx min " + str(datarx['TimeId'].min()))
+#print("rx max " + str(datarx['TimeId'].max()))
+#print("960 min " + str(data960['TimeId'].min()))
+#print("960 max " + str(data960['TimeId'].max()))
+#print("970-980 min " + str(data970_80['TimeId'].min()))
+#print("970-980 max " + str(data970_80['TimeId'].max()))
+#print("10 min " + str(data10['TimeId'].min()))
+#print("10 max " + str(data10['TimeId'].max()))
+#print("titan min " + str(datatitan['TimeId'].min()))
+#print("titan max " + str(datatitan['TimeId'].max()))
+#print('GPU min date: ', gpu_final['TimeId'].min())
+#print('GPU max date: ', gpu_final['TimeId'].max())
+#print('Btc min date: ', btc_df['Date'].min())
+#print('Btc max date: ', btc_df['Date'].max())
+#print('Eth min date: ', eth_df['Date'].min())
+#print('Eth max date: ', eth_df['Date'].max())
+#print('Ltc min date: ', ltc_df['Date'].min())
+#print('Ltc max date: ', ltc_df['Date'].max())
 
 # drop crypto rows that are outside gpu dates
 dataBTC = btc_df[btc_df['Date'] >= 'Mar 31, 2017']
@@ -123,9 +125,8 @@ rx560 = rx560.groupby('TimeId').mean()
 rx560 = rx560.reset_index()
 rx560['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in rx560['TimeId'].to_list()])
 rx560 = rx560.set_index('TimeId').asfreq('d').reset_index()
-
-print('rx560: ')
-print(rx560)
+#print('rx560: ')
+#print(rx560)
 
 rx570 = meanrx[meanrx['ProdId'] >= 905]
 rx570 = meanrx[meanrx['ProdId'] <= 916]
@@ -134,8 +135,8 @@ rx570 = rx570.groupby('TimeId').mean()
 rx570 = rx570.reset_index()
 rx570['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in rx570['TimeId'].to_list()])
 rx570 = rx570.set_index('TimeId').asfreq('d').reset_index()
-print('rx570: ')
-print(rx570)
+#print('rx570: ')
+#print(rx570)
 
 rx580 = meanrx[meanrx['ProdId'] >= 917]
 rx580 = meanrx[meanrx['ProdId'] <= 930]
@@ -144,8 +145,8 @@ rx580 = rx580.groupby('TimeId').mean()
 rx580 = rx580.reset_index()
 rx580['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in rx580['TimeId'].to_list()])
 rx580 = rx580.set_index('TimeId').asfreq('d').reset_index()
-print('rx580: ')
-print(rx580)
+#print('rx580: ')
+#print(rx580)
 
 vega56 = meanrx[meanrx['ProdId'] >= 931]
 vega56 = meanrx[meanrx['ProdId'] <= 936]
@@ -154,8 +155,8 @@ vega56 = vega56.groupby('TimeId').mean()
 vega56 = vega56.reset_index()
 vega56['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in vega56['TimeId'].to_list()])
 vega56 = vega56.set_index('TimeId').asfreq('d').reset_index()
-print('vega56: ')
-print(vega56)
+#print('vega56: ')
+#print(vega56)
 
 vega64 = meanrx[meanrx['ProdId'] >= 937]
 vega64 = meanrx[meanrx['ProdId'] <= 944]
@@ -164,8 +165,8 @@ vega64 = vega64.groupby('TimeId').mean()
 vega64 = vega64.reset_index()
 vega64['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in vega64['TimeId'].to_list()])
 vega64 = vega64.set_index('TimeId').asfreq('d').reset_index()
-print('vega64: ')
-print(vega64)
+#print('vega64: ')
+#print(vega64)
 
 mean960 = data960.sort_values('TimeId', ascending=False)
 mean960 = mean960[mean960['TimeId'] >= 20160824]
@@ -175,9 +176,8 @@ mean960 = mean960[mean960['ProdId'] <= 1897]
 #makegraph(mean960, 'GTX 960')
 mean960 = mean960.groupby('TimeId').mean()
 mean960 = mean960.reset_index()
-print('mean960: ')
-print(mean960)
-
+#print('mean960: ')
+#print(mean960)
 
 mean970_980 = data970_80.sort_values('TimeId', ascending=False)
 mean970_980 = mean970_980[mean970_980['TimeId'] >= 20160824]
@@ -187,24 +187,24 @@ mean970 = mean970_980[mean970_980['ProdId'] <= 1919]
 #makegraph(mean970, 'GTX 970')
 mean970 = mean970.groupby('TimeId').mean()
 mean970 = mean970.reset_index()
-print('mean970: ')
-print(mean970)
+#print('mean970: ')
+#print(mean970)
 
 mean980 = mean970_980[mean970_980['ProdId'] >= 1920]
 mean980 = mean970_980[mean970_980['ProdId'] <= 1934]
 #makegraph(mean980, 'GTX 980')
 mean980 = mean980.groupby('TimeId').mean()
 mean980 = mean980.reset_index()
-print('mean980: ')
-print(mean980)
+#print('mean980: ')
+#print(mean980)
 
 mean980ti = mean970_980[mean970_980['ProdId'] >= 1935]
 mean980ti = mean970_980[mean970_980['ProdId'] <= 1947]
 #makegraph(mean980ti, 'GTX 980ti')
 mean980ti = mean980ti.groupby('TimeId').mean()
 mean980ti = mean980ti.reset_index()
-print('mean980ti: ')
-print(mean980ti)
+#print('mean980ti: ')
+#print(mean980ti)
 
 mean10 = data10.sort_values('TimeId', ascending=False)
 mean10 = mean10[mean10['TimeId'] >= 20160824]
@@ -214,113 +214,139 @@ mean1050 = mean10[mean10['ProdId'] <= 1006]
 #makegraph(mean1050, 'GTX 1050')
 mean1050 = mean1050.groupby('TimeId').mean()
 mean1050 = mean1050.reset_index()
-print('mean1050: ')
-print(mean1050)
+#print('mean1050: ')
+#print(mean1050)
 
 mean1050ti = mean10[mean10['ProdId'] >= 1007]
 mean1050ti = mean10[mean10['ProdId'] <= 1018]
 #makegraph(mean1050ti, 'GTX 1050ti')
 mean1050ti = mean1050ti.groupby('TimeId').mean()
 mean1050ti = mean1050ti.reset_index()
-print('mean1050ti: ')
-print(mean1050ti)
+#print('mean1050ti: ')
+#print(mean1050ti)
 
 mean1060 = mean10[mean10['ProdId'] >= 1019]
 mean1060 = mean10[mean10['ProdId'] <= 1045]
 #makegraph(mean1060, 'GTX 1060')
 mean1060 = mean1060.groupby('TimeId').mean()
 mean1060 = mean1060.reset_index()
-print('mean1060: ')
-print(mean1060)
+#print('mean1060: ')
+#print(mean1060)
 
 mean1070 = mean10[mean10['ProdId'] >= 1046]
 mean1070 = mean10[mean10['ProdId'] <= 1060]
 #makegraph(mean1070, 'GTX 1070')
 mean1070 = mean1070.groupby('TimeId').mean()
 mean1070 = mean1070.reset_index()
-print('mean1070: ')
-print(mean1070)
+#print('mean1070: ')
+#print(mean1070)
 
 mean1070ti = mean10[mean10['ProdId'] >= 1061]
 mean1070ti = mean10[mean10['ProdId'] <= 1072]
 #makegraph(mean1070ti, 'GTX 1070ti')
 mean1070ti = mean1070ti.groupby('TimeId').mean()
 mean1070ti = mean1070ti.reset_index()
-print('mean1070ti: ')
-print(mean1070ti)
+#print('mean1070ti: ')
+#print(mean1070ti)
 
 mean1080 = mean10[mean10['ProdId'] >= 1073]
 mean1080 = mean10[mean10['ProdId'] <= 1087]
 #makegraph(mean1080, 'GTX 1080')
 mean1080 = mean1080.groupby('TimeId').mean()
 mean1080 = mean1080.reset_index()
-print('mean1080: ')
-print(mean1080)
+#print('mean1080: ')
+#print(mean1080)
 
 mean1080ti = mean10[mean10['ProdId'] >= 1088]
 mean1080ti = mean10[mean10['ProdId'] <= 1107]
-#makegraph(mean1080ti, 'GTX 1080ti')
+# makegraph(mean1080ti, 'GTX 1080ti')
 mean1080ti = mean1080ti.groupby('TimeId').mean()
 mean1080ti = mean1080ti.reset_index()
-print('mean1080ti: ')
-print(mean1080ti)
+#print('mean1080ti: ')
+#print(mean1080ti)
 
 meantitan = datatitan.sort_values('TimeId', ascending=False)
 meantitan = meantitan[meantitan['TimeId'] >= 20160824]
 meantitan = meantitan[meantitan['TimeId'] <= 20180315]
-#makegraph(meantitan, 'GTX titan')
+# makegraph(meantitan, 'GTX titan')
 meantitan = meantitan.groupby('TimeId').mean()
 meantitan = meantitan.reset_index()
-print('meantitan: ')
-print(meantitan)
+# print('meantitan: ')
+# print(meantitan)
 
 # create dataframes for linear regression
 
-reg_btc_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
-                                   '970_980_price', '10_price', 'titan_price', 'btc_price'])
-reg_eth_df = pd.DataFrame(columns=['date', 'rx_560_price', 'rx_570_price', 'rx_580_price', 'vega_56_price', 'vega_64_price',
+reg_df = pd.DataFrame(columns=['date', 'rx_560_price', 'rx_570_price', 'rx_580_price', 'vega_56_price', 'vega_64_price',
                                    '960_price', '970_price', '980_price', '980ti_price', '1050_price', '1050ti_price',
-                                    '1060_price', '1070_price', '1070ti_price', '1080_price', '1080ti_price','titan_price', 'eth_price'])
-reg_ltc_df = pd.DataFrame(columns=['date', 'rx_price', '960_price',
-                                   '970_980_price', '10_price', 'titan_price', 'ltc_price'])
+                                    '1060_price', '1070_price', '1070ti_price', '1080_price', '1080ti_price','titan_price',
+                                   'btc_price', 'eth_price', 'ltc_price'])
 
-reg_btc_df['date'] = dataBTC['Date']
-reg_btc_df['btc_price'] = dataBTC['Price']
+reg_df['date'] = dataBTC['Date']
+reg_df = reg_df.sort_values(by=['date'])
+reg_df = reg_df.reset_index()
+reg_df = reg_df.reset_index()
+reg_df['rx_560_price'] = rx560['Price_USD']
+reg_df['rx_560_price'] = reg_df['rx_560_price'].fillna(rx560['Price_USD'].mean())
+reg_df['rx_570_price'] = rx570['Price_USD']
+reg_df['rx_570_price'] = reg_df['rx_570_price'].fillna(rx570['Price_USD'].mean())
+reg_df['rx_580_price'] = rx580['Price_USD']
+reg_df['rx_580_price'] = reg_df['rx_580_price'].fillna(rx580['Price_USD'].mean())
+reg_df['vega_56_price'] = vega56['Price_USD']
+reg_df['vega_56_price'] = reg_df['vega_56_price'].fillna(vega56['Price_USD'].mean())
+reg_df['vega_64_price'] = vega64['Price_USD']
+reg_df['vega_64_price'] = reg_df['vega_64_price'].fillna(vega64['Price_USD'].mean())
+reg_df['960_price'] = mean960['Price_USD']
+reg_df['970_price'] = mean970['Price_USD']
+reg_df['980_price'] = mean980['Price_USD']
+reg_df['980ti_price'] = mean980ti['Price_USD']
+reg_df['1050_price'] = mean1050['Price_USD']
+reg_df['1050ti_price'] = mean1050ti['Price_USD']
+reg_df['1060_price'] = mean1060['Price_USD']
+reg_df['1070_price'] = mean1070['Price_USD']
+reg_df['1070ti_price'] = mean1070ti['Price_USD']
+reg_df['1080_price'] = mean1080['Price_USD']
+reg_df['1080ti_price'] = mean1080ti['Price_USD']
+reg_df['titan_price'] = meantitan['Price_USD']
+reg_df['titan_price'] = reg_df['titan_price'].fillna(meantitan['Price_USD'].mean())
+reg_df.drop('index', inplace=True, axis=1)
+reg_df['btc_price'] = dataBTC['Price']
+reg_df['eth_price'] = dataETH['Price']
+reg_df['ltc_price'] = dataLTC['Price']
+print("Final dataframe")
+print(reg_df)
 
-reg_eth_df['date'] = dataETH['Date']
-reg_eth_df = reg_eth_df.sort_values(by=['date'])
-reg_eth_df = reg_eth_df.reset_index()
-reg_eth_df['rx_560_price'] = rx560['Price_USD']
-reg_eth_df['rx_560_price'] = reg_eth_df['rx_560_price'].fillna(rx560['Price_USD'].mean())
-reg_eth_df['rx_570_price'] = rx570['Price_USD']
-reg_eth_df['rx_570_price'] = reg_eth_df['rx_570_price'].fillna(rx570['Price_USD'].mean())
-reg_eth_df['rx_580_price'] = rx580['Price_USD']
-reg_eth_df['rx_580_price'] = reg_eth_df['rx_580_price'].fillna(rx580['Price_USD'].mean())
-reg_eth_df['vega_56_price'] = vega56['Price_USD']
-reg_eth_df['vega_56_price'] = reg_eth_df['vega_56_price'].fillna(vega56['Price_USD'].mean())
-reg_eth_df['vega_64_price'] = vega64['Price_USD']
-reg_eth_df['vega_64_price'] = reg_eth_df['vega_64_price'].fillna(vega64['Price_USD'].mean())
-reg_eth_df['960_price'] = mean960['Price_USD']
-reg_eth_df['970_price'] = mean970['Price_USD']
-reg_eth_df['980_price'] = mean980['Price_USD']
-reg_eth_df['980ti_price'] = mean980ti['Price_USD']
-reg_eth_df['1050_price'] = mean1050['Price_USD']
-reg_eth_df['1050ti_price'] = mean1050ti['Price_USD']
-reg_eth_df['1060_price'] = mean1060['Price_USD']
-reg_eth_df['1070_price'] = mean1070['Price_USD']
-reg_eth_df['1070ti_price'] = mean1070ti['Price_USD']
-reg_eth_df['1080_price'] = mean1080['Price_USD']
-reg_eth_df['1080ti_price'] = mean1080ti['Price_USD']
-reg_eth_df['titan_price'] = meantitan['Price_USD']
-reg_eth_df['titan_price'] = reg_eth_df['titan_price'].fillna(meantitan['Price_USD'].mean())
-reg_eth_df.drop('index', inplace=True, axis=1)
-reg_eth_df['eth_price'] = dataETH['Price']
+# data splitting
+converted_data = reg_df[['rx_560_price', 'rx_570_price', 'rx_580_price', 'vega_56_price', 'vega_64_price',
+                                   '960_price', '970_price', '980_price', '980ti_price', '1050_price', '1050ti_price',
+                                    '1060_price', '1070_price', '1070ti_price', '1080_price', '1080ti_price',
+                             'titan_price']].apply(lambda x: [x['rx_560_price'], x['rx_570_price'], x['rx_580_price'],
+                                                              x['vega_56_price'], x['vega_64_price'], x['960_price'], x['970_price'],
+                                                              x['980_price'], x['980ti_price'], x['1050_price'], x['1050ti_price'],
+                                                              x['1060_price'], x['1070_price'], x['1070ti_price'], x['1080_price'],
+                                                              x['1080ti_price'], x['titan_price']], axis=1)
+gpuArray = list(converted_data)
 
-print(reg_eth_df)
+# model fitting
 
+x_train, x_test, y_train, y_test = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
+regBTC = LinearRegression()
+regBTC.fit(x_train, y_train)
+predBTC = regBTC.predict(x_test)
+scoreBTC = regBTC.score(x_test, y_test)
+# print(predETH)
+print('Linear regression score of BTC: ' + str((scoreBTC * 100)))
 
+x_train2, x_test2, y_train2, y_test2 = train_test_split(gpuArray, reg_df['eth_price'], test_size=0.1, random_state=0)
+regETH = LinearRegression()
+regETH.fit(x_train2, y_train2)
+predETH = regETH.predict(x_test2)
+scoreETH = regETH.score(x_test2, y_test2)
+print('Linear regression score of ETH: ' + str((scoreETH * 100)))
 
-reg_ltc_df['date'] = dataLTC['Date']
-reg_ltc_df['ltc_price'] = dataLTC['Price']
-
+x_train3, x_test3, y_train3, y_test3 = train_test_split(gpuArray, reg_df['ltc_price'], test_size=0.1, random_state=0)
+regLTC = LinearRegression()
+regLTC.fit(x_train3, y_train3)
+predLTC = regLTC.predict(x_test3)
+scoreLTC = regLTC.score(x_test3, y_test3)
+print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
 
