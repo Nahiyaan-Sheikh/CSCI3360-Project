@@ -81,17 +81,21 @@ print('Ltc min date: ', ltc_df['Date'].min())
 print('Ltc max date: ', ltc_df['Date'].max())
 
 # drop crypto rows that are outside gpu dates
-dataBTC = btc_df[btc_df['Date'] >= 'Sep 19, 2014']
+dataBTC = btc_df[btc_df['Date'] >= 'Mar 31, 2017']
 dataBTC = dataBTC[dataBTC['Date'] <= 'Mar 16, 2018']
+dataBTC = dataBTC.sort_values(by=['Date'])
 dataBTC = dataBTC.reset_index()
 
-dataETH = eth_df[eth_df['Date'] >= 'Sep 19, 2014']
+dataETH = eth_df[eth_df['Date'] >= 'Mar 31, 2017']
 dataETH = dataETH[dataETH['Date'] <= 'Mar 16, 2018']
-dataETH = dataBTC.reset_index()
+dataETH = dataETH.sort_values(by=['Date'])
+dataETH = dataETH.reset_index()
 
-dataLTC = ltc_df[ltc_df['Date'] >= 'Sep 19, 2014']
+dataLTC = ltc_df[ltc_df['Date'] >= 'Mar 31, 2017']
 dataLTC = dataLTC[dataLTC['Date'] <= 'Mar 16, 2018']
-dataLTC = dataBTC.reset_index()
+dataLTC = dataLTC.sort_values(by=['Date'])
+dataLTC = dataLTC.reset_index()
+
 
 # method for making graphs of dataframes
 def makegraph(dataframe, cardname):
@@ -117,6 +121,9 @@ rx560 = meanrx[meanrx['ProdId'] <= 904]
 #makegraph(rx560, 'RX 560')
 rx560 = rx560.groupby('TimeId').mean()
 rx560 = rx560.reset_index()
+rx560['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in rx560['TimeId'].to_list()])
+rx560 = rx560.set_index('TimeId').asfreq('d').reset_index()
+
 print('rx560: ')
 print(rx560)
 
@@ -125,6 +132,8 @@ rx570 = meanrx[meanrx['ProdId'] <= 916]
 #makegraph(rx570, 'RX 570')
 rx570 = rx570.groupby('TimeId').mean()
 rx570 = rx570.reset_index()
+rx570['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in rx570['TimeId'].to_list()])
+rx570 = rx570.set_index('TimeId').asfreq('d').reset_index()
 print('rx570: ')
 print(rx570)
 
@@ -133,6 +142,8 @@ rx580 = meanrx[meanrx['ProdId'] <= 930]
 #makegraph(rx580, 'RX 580')
 rx580 = rx580.groupby('TimeId').mean()
 rx580 = rx580.reset_index()
+rx580['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in rx580['TimeId'].to_list()])
+rx580 = rx580.set_index('TimeId').asfreq('d').reset_index()
 print('rx580: ')
 print(rx580)
 
@@ -141,6 +152,8 @@ vega56 = meanrx[meanrx['ProdId'] <= 936]
 #makegraph(vega56, 'vega 56')
 vega56 = vega56.groupby('TimeId').mean()
 vega56 = vega56.reset_index()
+vega56['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in vega56['TimeId'].to_list()])
+vega56 = vega56.set_index('TimeId').asfreq('d').reset_index()
 print('vega56: ')
 print(vega56)
 
@@ -149,6 +162,8 @@ vega64 = meanrx[meanrx['ProdId'] <= 944]
 #makegraph(vega64, 'vega 64')
 vega64 = vega64.groupby('TimeId').mean()
 vega64 = vega64.reset_index()
+vega64['TimeId'] = list([pd.to_datetime(x, format='%Y%m%d') for x in vega64['TimeId'].to_list()])
+vega64 = vega64.set_index('TimeId').asfreq('d').reset_index()
 print('vega64: ')
 print(vega64)
 
@@ -273,12 +288,18 @@ reg_btc_df['date'] = dataBTC['Date']
 reg_btc_df['btc_price'] = dataBTC['Price']
 
 reg_eth_df['date'] = dataETH['Date']
-reg_eth_df['eth_price'] = dataETH['Price']
+reg_eth_df = reg_eth_df.sort_values(by=['date'])
+reg_eth_df = reg_eth_df.reset_index()
 reg_eth_df['rx_560_price'] = rx560['Price_USD']
+reg_eth_df['rx_560_price'] = reg_eth_df['rx_560_price'].fillna(rx560['Price_USD'].mean())
 reg_eth_df['rx_570_price'] = rx570['Price_USD']
+reg_eth_df['rx_570_price'] = reg_eth_df['rx_570_price'].fillna(rx570['Price_USD'].mean())
 reg_eth_df['rx_580_price'] = rx580['Price_USD']
+reg_eth_df['rx_580_price'] = reg_eth_df['rx_580_price'].fillna(rx580['Price_USD'].mean())
 reg_eth_df['vega_56_price'] = vega56['Price_USD']
+reg_eth_df['vega_56_price'] = reg_eth_df['vega_56_price'].fillna(vega56['Price_USD'].mean())
 reg_eth_df['vega_64_price'] = vega64['Price_USD']
+reg_eth_df['vega_64_price'] = reg_eth_df['vega_64_price'].fillna(vega64['Price_USD'].mean())
 reg_eth_df['960_price'] = mean960['Price_USD']
 reg_eth_df['970_price'] = mean970['Price_USD']
 reg_eth_df['980_price'] = mean980['Price_USD']
@@ -291,8 +312,13 @@ reg_eth_df['1070ti_price'] = mean1070ti['Price_USD']
 reg_eth_df['1080_price'] = mean1080['Price_USD']
 reg_eth_df['1080ti_price'] = mean1080ti['Price_USD']
 reg_eth_df['titan_price'] = meantitan['Price_USD']
+reg_eth_df['titan_price'] = reg_eth_df['titan_price'].fillna(meantitan['Price_USD'].mean())
+reg_eth_df.drop('index', inplace=True, axis=1)
+reg_eth_df['eth_price'] = dataETH['Price']
 
 print(reg_eth_df)
+
+
 
 reg_ltc_df['date'] = dataLTC['Date']
 reg_ltc_df['ltc_price'] = dataLTC['Price']
