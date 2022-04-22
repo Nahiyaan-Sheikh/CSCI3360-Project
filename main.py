@@ -352,7 +352,7 @@ def graphCardCrypto():
     fig.tight_layout()
     plt.show()
 
-graphCardCrypto()
+# graphCardCrypto()
 
 
 # data splitting
@@ -398,16 +398,19 @@ print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
 x_train4, x_test4, y_train4, y_test4 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
 ridgeBTC = linear_model.Ridge(alpha=.5)
 ridgeBTC.fit(x_train4, y_train4)
+ridgepredBTC = ridgeBTC.predict(x_test4)
 ridgeScoreBTC = ridgeBTC.score(x_test4, y_test4)
 
 x_train5, x_test5, y_train5, y_test5 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
 ridgeETH = linear_model.Ridge(alpha=.5)
 ridgeETH.fit(x_train5, y_train5)
+ridgepredETH = ridgeETH.predict(x_test5)
 ridgeScoreETH = ridgeETH.score(x_test5, y_test5)
 
 x_train6, x_test6, y_train6, y_test6 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
 ridgeLTC = linear_model.Ridge(alpha=.5)
-ridgeLTC.fit(x_train5, y_train6)
+ridgeLTC.fit(x_train6, y_train6)
+ridgepredLTC = ridgeLTC.predict(x_test6)
 ridgeScoreLTC = ridgeLTC.score(x_test6, y_test6)
 
 print('')
@@ -420,16 +423,19 @@ print('Ridge regression score of LTC: ' + str((ridgeScoreLTC * 100)))
 x_train7, x_test7, y_train7, y_test7 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
 clfBTC = tree.DecisionTreeRegressor()
 clfBTC.fit(x_train7, y_train7)
+clfpredBTC = clfBTC.predict(x_test7)
 clfScoreBTC = clfBTC.score(x_test7, y_test7)
 
 x_train8, x_test8, y_train8, y_test8 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
 clfETH = tree.DecisionTreeRegressor()
 clfETH.fit(x_train8, y_train8)
+clfpredETH = clfETH.predict(x_test8)
 clfScoreETH = clfETH.score(x_test8, y_test8)
 
 x_train9, x_test9, y_train9, y_test9 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
 clfLTC = tree.DecisionTreeRegressor()
 clfLTC.fit(x_train9, y_train9)
+clfpredLTC = clfLTC.predict(x_test9)
 clfScoreLTC = clfLTC.score(x_test9, y_test9)
 
 print('')
@@ -448,15 +454,15 @@ regGPU = LinearRegression()
 regGPU.fit(x_train, y_train)
 regScoreGPU = regGPU.score(x_test, y_test)
 
-x_train2, x_test2, y_train2, y_test2 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
+x_train2, x_test2, y_train2, y_test2 = train_test_split(cryptoArr, gpuArray, test_size=0.1, random_state=0)
 ridgeGPU = linear_model.Ridge(alpha=.5)
 ridgeGPU.fit(x_train2, y_train2)
 ridgeScoreGPU = ridgeGPU.score(x_test2, y_test2)
 
-x_train3, x_test3, y_train3, y_test3 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
+x_train3, x_test3, y_train3, y_test3 = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
 dtrGPU = tree.DecisionTreeRegressor()
 dtrGPU.fit(x_train3, y_train3)
-dtrScoreGPU = regBTC.score(x_test3, y_test3)
+dtrScoreGPU = dtrGPU.score(x_test3, y_test3)
 
 print('')
 print('Linear regression score of GPUs: ' + str((regScoreGPU * 100)))
