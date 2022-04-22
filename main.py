@@ -7,9 +7,7 @@ import datetime as dt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
-from sklearn import svm
 from sklearn import tree
-from sklearn.linear_model import SGDClassifier
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -318,28 +316,25 @@ print("Final dataframe")
 print(reg_df)
 
 # Visualization of Titan Card with ETH Price
-fig, ax = plt.subplots()
-reg_df['eth_price'] = reg_df['eth_price'].astype(float)
-ax.plot(reg_df['date'], reg_df['titan_price'])
-ax.tick_params(axis='y')
-ax2 = ax.twinx()
-ax2.set_ylabel('eth Price')
-ax2.plot(reg_df['date'],reg_df['eth_price'], color="red")
-ax2.tick_params(axis='y')
-ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=1))
-plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
-ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
-plt.tight_layout()
-fig.tight_layout()
-plt.show()
 
-fig1, ax1 = plt.subplots()
-reg_df['eth_price'] = reg_df['eth_price'].astype(float)
-ax1.plot(reg_df['date'],reg_df['eth_price'])
-ax1.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=1))
-plt.setp(ax1.xaxis.get_majorticklabels(), rotation=90)
-ax1.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
-plt.show()
+def graphCardCrypto(crypto, card):
+    ylabel = crypto + 'price'
+    fig, ax = plt.subplots()
+    reg_df[crypto] = reg_df[crypto].astype(float)
+    ax.plot(reg_df['date'], reg_df[card])
+    ax.tick_params(axis='y')
+    ax2 = ax.twinx()
+    ax2.set_ylabel(ylabel)
+    ax2.plot(reg_df['date'], reg_df[crypto], color="red")
+    ax2.tick_params(axis='y')
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=1))
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
+    ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+    plt.tight_layout()
+    fig.tight_layout()
+    plt.show()
+
+graphCardCrypto('eth_price', 'titan_price')
 
 
 # data splitting
@@ -360,7 +355,6 @@ regBTC = LinearRegression()
 regBTC.fit(x_train, y_train)
 predBTC = regBTC.predict(x_test)
 scoreBTC = regBTC.score(x_test, y_test)
-# print(predETH)
 
 x_train2, x_test2, y_train2, y_test2 = train_test_split(gpuArray, reg_df['eth_price'], test_size=0.1, random_state=0)
 regETH = LinearRegression()
@@ -378,6 +372,8 @@ print('')
 print('Linear regression score of BTC: ' + str((scoreBTC * 100)))
 print('Linear regression score of ETH: ' + str((scoreETH * 100)))
 print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
+
+
 
 # ridge regression fitting
 
@@ -422,3 +418,17 @@ print('')
 print('Decision tree regressor score of BTC: ' + str((clfScoreBTC * 100)))
 print('Decision tree regressor score of ETH: ' + str((clfScoreETH * 100)))
 print('Decision tree regressor score of LTC: ' + str((clfScoreLTC * 100)))
+
+
+# trying linear regression to predict gpu from crypto
+
+converted_data_crypto = reg_df[['btc_price', 'eth_price', 'ltc_price']].apply(lambda x: [x['btc_price'], x['eth_price'], x['ltc_price']], axis=1)
+cryptoArr = list(converted_data_crypto)
+
+x_train, x_test, y_train, y_test = train_test_split(cryptoArr, reg_df['1080_price'], test_size=0.2, random_state=0)
+reg580 = tree.DecisionTreeRegressor()
+reg580.fit(x_train, y_train)
+score580 = reg580.score(x_test, y_test)
+
+print('')
+print('DTR score of 1080: ' + str((score580 * 100)))
