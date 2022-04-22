@@ -425,10 +425,10 @@ print('Decision tree regressor score of LTC: ' + str((clfScoreLTC * 100)))
 converted_data_crypto = reg_df[['btc_price', 'eth_price', 'ltc_price']].apply(lambda x: [x['btc_price'], x['eth_price'], x['ltc_price']], axis=1)
 cryptoArr = list(converted_data_crypto)
 
-x_train, x_test, y_train, y_test = train_test_split(cryptoArr, reg_df['1080_price'], test_size=0.2, random_state=0)
+x_train, x_test, y_train, y_test = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
 reg580 = tree.DecisionTreeRegressor()
 reg580.fit(x_train, y_train)
 score580 = reg580.score(x_test, y_test)
 
 print('')
-print('DTR score of 1080: ' + str((score580 * 100)))
+print('DTR score of GPUs: ' + str((score580 * 100)))
