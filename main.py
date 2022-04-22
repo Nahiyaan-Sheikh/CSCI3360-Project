@@ -426,9 +426,21 @@ converted_data_crypto = reg_df[['btc_price', 'eth_price', 'ltc_price']].apply(la
 cryptoArr = list(converted_data_crypto)
 
 x_train, x_test, y_train, y_test = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
-reg580 = tree.DecisionTreeRegressor()
-reg580.fit(x_train, y_train)
-score580 = reg580.score(x_test, y_test)
+regGPU = LinearRegression()
+regGPU.fit(x_train, y_train)
+regScoreGPU = regGPU.score(x_test, y_test)
+
+x_train2, x_test2, y_train2, y_test2 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
+ridgeGPU = linear_model.Ridge(alpha=.5)
+ridgeGPU.fit(x_train2, y_train2)
+ridgeScoreGPU = ridgeGPU.score(x_test2, y_test2)
+
+x_train3, x_test3, y_train3, y_test3 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
+dtrGPU = tree.DecisionTreeRegressor()
+dtrGPU.fit(x_train3, y_train3)
+dtrScoreGPU = regBTC.score(x_test3, y_test3)
 
 print('')
-print('DTR score of GPUs: ' + str((score580 * 100)))
+print('Linear regression score of GPUs: ' + str((regScoreGPU * 100)))
+print('Ridge regression of GPUs: ' + str((ridgeScoreGPU * 100)))
+print('DTR score of GPUs: ' + str((dtrScoreGPU * 100)))
