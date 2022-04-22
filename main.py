@@ -317,16 +317,34 @@ print(reg_df)
 
 # Visualization of Titan Card with ETH Price
 
-def graphCardCrypto(crypto, card):
-    ylabel = crypto + 'price'
+def graphCardCrypto():
     fig, ax = plt.subplots()
-    reg_df[crypto] = reg_df[crypto].astype(float)
-    ax.plot(reg_df['date'], reg_df[card])
+    reg_df['eth_price'] = reg_df['eth_price'].astype(float)
+    reg_df['btc_price'] = reg_df['btc_price'].astype(float)
+    reg_df['ltc_price'] = reg_df['ltc_price'].astype(float)
+    ax.set_ylabel('Crypto Prices')
+    ax.plot(reg_df['date'], reg_df['btc_price'], color='blue', linewidth=1, label='BTC')
+    ax.plot(reg_df['date'], reg_df['eth_price'], color='green', linewidth=1, label='ETH')
+    ax.plot(reg_df['date'], reg_df['ltc_price'], color='red', linewidth=1, label='LTC')
+    #ax.plot(reg_df['date'], reg_df['rx_560_price'], color='blue', linewidth=1, label='RX-560')
+    #ax.plot(reg_df['date'], reg_df['rx_570_price'], color='green', linewidth=1, label='RX-570')
+    #ax.plot(reg_df['date'], reg_df['rx_580_price'], color='red', linewidth=1, label='RX-580')
+    #ax.plot(reg_df['date'], reg_df['vega_56_price'], color='cyan', linewidth=1, label='RX-Vega56')
+    #x.plot(reg_df['date'], reg_df['vega_64_price'], color='magenta', linewidth=1, label='RX-Vega64')
+    #ax.plot(reg_df['date'], reg_df['960_price'], color='yellow', linewidth=1, label='GTX-960')
+    #ax.plot(reg_df['date'], reg_df['970_price'], color='purple', linewidth=1, label='GTX-970')
+    #ax.plot(reg_df['date'], reg_df['980_price'], color='pink', linewidth=1, label='GTX-980')
+    #ax.plot(reg_df['date'], reg_df['980ti_price'], color='orange', linewidth=1, label='GTX-980ti')
+    #ax.plot(reg_df['date'], reg_df['1050_price'], color='brown', linewidth=1, label='GTX-1050')
+    #ax.plot(reg_df['date'], reg_df['1050ti_price'], color='gray', linewidth=1, label='GTX-1050ti')
+    #ax.plot(reg_df['date'], reg_df['1060_price'], color='olive', linewidth=1, label='GTX-1060')
+    #ax.plot(reg_df['date'], reg_df['1070_price'], color='lime', linewidth=1, label='GTX-1070')
+    #ax.plot(reg_df['date'], reg_df['1070ti_price'], color='maroon', linewidth=1, label='GTX-1070ti')
+    #ax.plot(reg_df['date'], reg_df['1080_price'], color='navy', linewidth=1, label='GTX-1080')
+    #ax.plot(reg_df['date'], reg_df['1080ti_price'], color='lightsteelblue', linewidth=1, label='GTX-1080ti')
+    #ax.plot(reg_df['date'], reg_df['titan_price'], color='lightsalmon', linewidth=1, label='GTX-Titan')
+    ax.legend()
     ax.tick_params(axis='y')
-    ax2 = ax.twinx()
-    ax2.set_ylabel(ylabel)
-    ax2.plot(reg_df['date'], reg_df[crypto], color="red")
-    ax2.tick_params(axis='y')
     ax.xaxis.set_major_locator(mdates.WeekdayLocator(byweekday=1))
     plt.setp(ax.xaxis.get_majorticklabels(), rotation=90)
     ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
@@ -334,7 +352,7 @@ def graphCardCrypto(crypto, card):
     fig.tight_layout()
     plt.show()
 
-graphCardCrypto('eth_price', 'titan_price')
+graphCardCrypto()
 
 
 # data splitting
