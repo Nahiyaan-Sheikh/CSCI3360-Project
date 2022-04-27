@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 from sklearn import tree
+from sklearn.metrics import mean_squared_error, r2_score
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -388,6 +389,18 @@ scoreLTC = regLTC.score(x_test3, y_test3)
 
 print('')
 print('Linear regression score of BTC: ' + str((scoreBTC * 100)))
+print("Coefficients: \n", regBTC.coef_)
+print("Mean squared error: %.2f" % mean_squared_error(y_test, predBTC))
+print("Coefficient of determination: %.2f" % r2_score(y_test, predBTC))
+
+plt.scatter(x_train, y_train, color='black')
+plt.plot(x_train, predBTC, color='blue', linewidth=2)
+plt.xlabel('GPU Price')
+plt.ylabel('Crpyto Price')
+plt.xticks(())
+plt.yticks(())
+plt.show()
+
 print('Linear regression score of ETH: ' + str((scoreETH * 100)))
 print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
 
@@ -444,27 +457,4 @@ print('Decision tree regressor score of ETH: ' + str((clfScoreETH * 100)))
 print('Decision tree regressor score of LTC: ' + str((clfScoreLTC * 100)))
 
 
-# trying linear regression to predict gpu from crypto
 
-converted_data_crypto = reg_df[['btc_price', 'eth_price', 'ltc_price']].apply(lambda x: [x['btc_price'], x['eth_price'], x['ltc_price']], axis=1)
-cryptoArr = list(converted_data_crypto)
-
-x_train, x_test, y_train, y_test = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
-regGPU = LinearRegression()
-regGPU.fit(x_train, y_train)
-regScoreGPU = regGPU.score(x_test, y_test)
-
-x_train2, x_test2, y_train2, y_test2 = train_test_split(cryptoArr, gpuArray, test_size=0.1, random_state=0)
-ridgeGPU = linear_model.Ridge(alpha=.5)
-ridgeGPU.fit(x_train2, y_train2)
-ridgeScoreGPU = ridgeGPU.score(x_test2, y_test2)
-
-x_train3, x_test3, y_train3, y_test3 = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
-dtrGPU = tree.DecisionTreeRegressor()
-dtrGPU.fit(x_train3, y_train3)
-dtrScoreGPU = dtrGPU.score(x_test3, y_test3)
-
-print('')
-print('Linear regression score of GPUs: ' + str((regScoreGPU * 100)))
-print('Ridge regression of GPUs: ' + str((ridgeScoreGPU * 100)))
-print('DTR score of GPUs: ' + str((dtrScoreGPU * 100)))
