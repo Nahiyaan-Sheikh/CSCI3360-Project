@@ -9,6 +9,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 from sklearn import tree
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import GridSearchCV
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -374,36 +375,47 @@ regBTC = LinearRegression()
 regBTC.fit(x_train, y_train)
 predBTC = regBTC.predict(x_test)
 scoreBTC = regBTC.score(x_test, y_test)
+x_trainArr = np.array(x_train).astype(float)
+x_trainArr = np.arange(0, len(x_train), 1)
+y_trainArr = np.array(y_train).astype(float)
 
 x_train2, x_test2, y_train2, y_test2 = train_test_split(gpuArray, reg_df['eth_price'], test_size=0.1, random_state=0)
 regETH = LinearRegression()
 regETH.fit(x_train2, y_train2)
 predETH = regETH.predict(x_test2)
 scoreETH = regETH.score(x_test2, y_test2)
+x_train2Arr = np.array(x_train2).astype(float)
+x_train2Arr = np.arange(0, len(x_train2), 1)
+y_train2Arr = np.array(y_train2).astype(float)
 
 x_train3, x_test3, y_train3, y_test3 = train_test_split(gpuArray, reg_df['ltc_price'], test_size=0.1, random_state=0)
 regLTC = LinearRegression()
 regLTC.fit(x_train3, y_train3)
 predLTC = regLTC.predict(x_test3)
 scoreLTC = regLTC.score(x_test3, y_test3)
+x_train3Arr = np.array(x_train3).astype(float)
+x_train3Arr = np.arange(0, len(x_train3), 1)
+y_train3Arr = np.array(y_train3).astype(float)
+
 
 print('')
 print('Linear regression score of BTC: ' + str((scoreBTC * 100)))
-print("Coefficients: \n", regBTC.coef_)
 print("Mean squared error: %.2f" % mean_squared_error(y_test, predBTC))
-print("Coefficient of determination: %.2f" % r2_score(y_test, predBTC))
-
-plt.scatter(x_train, y_train, color='black')
-plt.plot(x_train, predBTC, color='blue', linewidth=2)
-plt.xlabel('GPU Price')
-plt.ylabel('Crpyto Price')
-plt.xticks(())
-plt.yticks(())
+plt.scatter(x_trainArr, y_trainArr, color='black', alpha=0.5)
+plt.plot(x_trainArr, regBTC.predict(x_train), color='blue', linewidth=2)
 plt.show()
 
 print('Linear regression score of ETH: ' + str((scoreETH * 100)))
-print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test2, predETH))
+plt.scatter(x_train2Arr, y_train2Arr, color='black', alpha=0.5)
+plt.plot(x_train2Arr, regETH.predict(x_train2), color='blue', linewidth=2)
+#plt.show()
 
+print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test3, predLTC))
+plt.scatter(x_train3Arr, y_train3Arr, color='black', alpha=0.5)
+plt.plot(x_train3Arr, regLTC.predict(x_train3), color='blue', linewidth=2)
+#plt.show()
 
 
 # ridge regression fitting
@@ -413,23 +425,43 @@ ridgeBTC = linear_model.Ridge(alpha=.5)
 ridgeBTC.fit(x_train4, y_train4)
 ridgepredBTC = ridgeBTC.predict(x_test4)
 ridgeScoreBTC = ridgeBTC.score(x_test4, y_test4)
+x_train4Arr = np.array(x_test4).astype(float)
+x_train4Arr = np.arange(0, len(x_test4), 1)
+y_train4Arr = np.array(y_test4).astype(float)
 
 x_train5, x_test5, y_train5, y_test5 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
 ridgeETH = linear_model.Ridge(alpha=.5)
 ridgeETH.fit(x_train5, y_train5)
 ridgepredETH = ridgeETH.predict(x_test5)
 ridgeScoreETH = ridgeETH.score(x_test5, y_test5)
+x_train5Arr = np.array(x_test5).astype(float)
+x_train5Arr = np.arange(0, len(x_test5), 1)
+y_train5Arr = np.array(y_test5).astype(float)
 
 x_train6, x_test6, y_train6, y_test6 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
 ridgeLTC = linear_model.Ridge(alpha=.5)
 ridgeLTC.fit(x_train6, y_train6)
 ridgepredLTC = ridgeLTC.predict(x_test6)
 ridgeScoreLTC = ridgeLTC.score(x_test6, y_test6)
+x_train6Arr = np.array(x_train6).astype(float)
+x_train6Arr = np.arange(0, len(x_train6), 1)
+y_train6Arr = np.array(y_train6).astype(float)
 
 print('')
 print('Ridge regression score of BTC: ' + str((ridgeScoreBTC * 100)))
+plt.scatter(x_train4Arr, y_train4Arr, color='black', alpha=0.5)
+plt.plot(x_train4Arr, ridgeBTC.predict(x_test4), color='blue', linewidth=2)
+#plt.show()
+
 print('Ridge regression score of ETH: ' + str((ridgeScoreETH * 100)))
+plt.scatter(x_train5Arr, y_train5Arr, color='black', alpha=0.5)
+plt.plot(x_train5Arr, ridgeETH.predict(x_test5), color='blue', linewidth=2)
+#plt.show()
+
 print('Ridge regression score of LTC: ' + str((ridgeScoreLTC * 100)))
+plt.scatter(x_train6Arr, y_train6Arr, color='black', alpha=0.5)
+plt.plot(x_train6Arr, ridgeLTC.predict(x_train6), color='blue', linewidth=2)
+#plt.show()
 
 # decision tree regressor model fitting (higher score than other models but inconsistent)
 
@@ -438,6 +470,9 @@ clfBTC = tree.DecisionTreeRegressor()
 clfBTC.fit(x_train7, y_train7)
 clfpredBTC = clfBTC.predict(x_test7)
 clfScoreBTC = clfBTC.score(x_test7, y_test7)
+x_train7Arr = np.array(x_train7).astype(float)
+x_train7Arr = np.arange(0, len(x_train7), 1)
+y_train7Arr = np.array(y_train7).astype(float)
 
 x_train8, x_test8, y_train8, y_test8 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
 clfETH = tree.DecisionTreeRegressor()
@@ -453,6 +488,9 @@ clfScoreLTC = clfLTC.score(x_test9, y_test9)
 
 print('')
 print('Decision tree regressor score of BTC: ' + str((clfScoreBTC * 100)))
+plt.scatter(x_train7Arr, y_train7Arr, color='black', alpha=0.5)
+plt.plot(x_train7Arr, ridgeBTC.predict(x_train7), color='blue', linewidth=2)
+plt.show()
 print('Decision tree regressor score of ETH: ' + str((clfScoreETH * 100)))
 print('Decision tree regressor score of LTC: ' + str((clfScoreLTC * 100)))
 
