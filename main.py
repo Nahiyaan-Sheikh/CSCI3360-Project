@@ -10,6 +10,8 @@ from sklearn import linear_model
 from sklearn import tree
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import PolynomialFeatures
 from sklearn.svm import SVR
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -440,8 +442,7 @@ ridgeETH = linear_model.Ridge(alpha=.5)
 ridgeETH.fit(x_train5, y_train5)
 ridgepredETH = ridgeETH.predict(x_test5)
 ridgeScoreETH = ridgeETH.score(x_test5, y_test5)
-x_train5Arr = np.array(x_test5).astype(float)
-x_train5Arr = np.arange(0, len(x_test5), 1)
+x_train5Arr = np.array(x_test5)[:, 0].astype(float)
 y_train5Arr = np.array(y_test5).astype(float)
 
 x_train6, x_test6, y_train6, y_test6 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
@@ -465,6 +466,23 @@ print('Ridge regression score of ETH: ' + str((ridgeScoreETH * 100)))
 print("Mean squared error: %.2f" % mean_squared_error(y_test5, ridgepredETH))
 plt.scatter(x_train5Arr, y_train5Arr, color='black', alpha=0.5)
 plt.plot(x_train5Arr, ridgeETH.predict(x_test5), color='blue', linewidth=2)
+fig, ax = plt.subplots()
+plt.xlabel('GPU Price')
+plt.ylabel('Crypto Price')
+plt.title('Predict ETH')
+ax.scatter(x_train5Arr, y_train5Arr, color='black', alpha=0.5)
+#ax.plot(regGPU2.predict(x_train13), xArr, color='blue', linewidth=2)
+#theta = np.polyfit(xArr, regGPU2.predict(x_train13), 1)
+#y_line = theta[2] + theta[1] * pow(xArr, 1) + theta[0] * pow(xArr, 2)
+#ax.plot(y_line, xArr, color='green', linewidth=2)
+true_fun = lambda x_train5Arr: np.cos(1.5 * np.pi * x_train5Arr)
+
+polynomial_features = PolynomialFeatures(degree=5, include_bias=False)
+linear_regression = linear_model.Ridge()
+pipeline = Pipeline([("polynomial_features", polynomial_features),("linear_regression", linear_regression)])
+pipeline.fit(x_train5Arr[:, np.newaxis], y_train5Arr)
+ax.plot(sorted(x_train5Arr), sorted(pipeline.predict(x_train5Arr[:, np.newaxis])), label="Model")
+#ax.plot(yArr, true_fun(yArr), label="true function")
 #plt.show()
 
 print('Ridge regression score of LTC: ' + str((ridgeScoreLTC * 100)))
@@ -575,9 +593,15 @@ plt.ylabel('Crypto Price')
 plt.title('Predict RX 580')
 ax.scatter(yArr, xArr, color='black', alpha=0.5)
 #ax.plot(regGPU2.predict(x_train13), xArr, color='blue', linewidth=2)
-theta = np.polyfit(xArr, regGPU2.predict(x_train13), 2)
-y_line = theta[2] + theta[1] * pow(xArr, 1) + theta[0] * pow(xArr, 2)
-ax.plot(y_line, xArr, color='green', linewidth=2)
+#theta = np.polyfit(xArr, regGPU2.predict(x_train13), 1)
+#y_line = theta[2] + theta[1] * pow(xArr, 1) + theta[0] * pow(xArr, 2)
+#ax.plot(y_line, xArr, color='green', linewidth=2)
+true_fun = lambda yArr: np.cos(1.5 * np.pi * yArr)
+
+polynomial_features = PolynomialFeatures(degree=6, include_bias=False)
+linear_regression = LinearRegression()
+pipeline = Pipeline([("polynomial_features", polynomial_features),("linear_regression", linear_regression)])
+pipeline.fit(yArr[:, np.newaxis], xArr)
+ax.plot(sorted(yArr), sorted(pipeline.predict(yArr[:, np.newaxis])), label="Model")
+#ax.plot(yArr, true_fun(yArr), label="true function")
 plt.show()
-
-
