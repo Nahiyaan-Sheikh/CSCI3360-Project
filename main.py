@@ -8,8 +8,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import linear_model
 from sklearn import tree
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVR
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -264,8 +265,6 @@ mean1080ti = mean10[mean10['ProdId'] <= 1107]
 # makegraph(mean1080ti, 'GTX 1080ti')
 mean1080ti = mean1080ti.groupby('TimeId').mean()
 mean1080ti = mean1080ti.reset_index()
-#print('mean1080ti: ')
-#print(mean1080ti)
 
 meantitan = datatitan.sort_values('TimeId', ascending=False)
 meantitan = meantitan[meantitan['TimeId'] >= 20160824]
@@ -401,18 +400,21 @@ y_train3Arr = np.array(y_train3).astype(float)
 print('')
 print('Linear regression score of BTC: ' + str((scoreBTC * 100)))
 print("Mean squared error: %.2f" % mean_squared_error(y_test, predBTC))
+print("Coefficient of determination: %.2f" % r2_score(y_test, predBTC))
 plt.scatter(x_trainArr, y_trainArr, color='black', alpha=0.5)
 plt.plot(x_trainArr, regBTC.predict(x_train), color='blue', linewidth=2)
-plt.show()
+#plt.show()
 
 print('Linear regression score of ETH: ' + str((scoreETH * 100)))
 print("Mean squared error: %.2f" % mean_squared_error(y_test2, predETH))
+print("Coefficient of determination: %.2f" % r2_score(y_test2, predETH))
 plt.scatter(x_train2Arr, y_train2Arr, color='black', alpha=0.5)
 plt.plot(x_train2Arr, regETH.predict(x_train2), color='blue', linewidth=2)
 #plt.show()
 
 print('Linear regression score of LTC: ' + str((scoreLTC * 100)))
 print("Mean squared error: %.2f" % mean_squared_error(y_test3, predLTC))
+print("Coefficient of determination: %.2f" % r2_score(y_test3, predLTC))
 plt.scatter(x_train3Arr, y_train3Arr, color='black', alpha=0.5)
 plt.plot(x_train3Arr, regLTC.predict(x_train3), color='blue', linewidth=2)
 #plt.show()
@@ -421,7 +423,7 @@ plt.plot(x_train3Arr, regLTC.predict(x_train3), color='blue', linewidth=2)
 # ridge regression fitting
 
 x_train4, x_test4, y_train4, y_test4 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.1, random_state=0)
-ridgeBTC = linear_model.Ridge(alpha=.5)
+ridgeBTC = linear_model.Ridge(alpha=.05)
 ridgeBTC.fit(x_train4, y_train4)
 ridgepredBTC = ridgeBTC.predict(x_test4)
 ridgeScoreBTC = ridgeBTC.score(x_test4, y_test4)
@@ -449,16 +451,20 @@ y_train6Arr = np.array(y_train6).astype(float)
 
 print('')
 print('Ridge regression score of BTC: ' + str((ridgeScoreBTC * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test4, ridgepredBTC))
+print("Coefficient of determination: %.2f" % r2_score(y_test4, ridgepredBTC))
 plt.scatter(x_train4Arr, y_train4Arr, color='black', alpha=0.5)
 plt.plot(x_train4Arr, ridgeBTC.predict(x_test4), color='blue', linewidth=2)
 #plt.show()
 
 print('Ridge regression score of ETH: ' + str((ridgeScoreETH * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test5, ridgepredETH))
 plt.scatter(x_train5Arr, y_train5Arr, color='black', alpha=0.5)
 plt.plot(x_train5Arr, ridgeETH.predict(x_test5), color='blue', linewidth=2)
 #plt.show()
 
 print('Ridge regression score of LTC: ' + str((ridgeScoreLTC * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test6, ridgepredLTC))
 plt.scatter(x_train6Arr, y_train6Arr, color='black', alpha=0.5)
 plt.plot(x_train6Arr, ridgeLTC.predict(x_train6), color='blue', linewidth=2)
 #plt.show()
@@ -479,20 +485,82 @@ clfETH = tree.DecisionTreeRegressor()
 clfETH.fit(x_train8, y_train8)
 clfpredETH = clfETH.predict(x_test8)
 clfScoreETH = clfETH.score(x_test8, y_test8)
+x_train8Arr = np.array(x_train8).astype(float)
+x_train8Arr = np.arange(0, len(x_train8), 1)
+y_train8Arr = np.array(y_train8).astype(float)
 
 x_train9, x_test9, y_train9, y_test9 = train_test_split(gpuArray, reg_df['btc_price'], test_size=0.2, random_state=0)
 clfLTC = tree.DecisionTreeRegressor()
 clfLTC.fit(x_train9, y_train9)
 clfpredLTC = clfLTC.predict(x_test9)
 clfScoreLTC = clfLTC.score(x_test9, y_test9)
+x_train9Arr = np.array(x_train9).astype(float)
+x_train9Arr = np.arange(0, len(x_train9), 1)
+y_train9Arr = np.array(y_train9).astype(float)
 
 print('')
 print('Decision tree regressor score of BTC: ' + str((clfScoreBTC * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test7, clfpredBTC))
+print("Coefficient of determination: %.2f" % r2_score(y_test7, clfpredBTC))
 plt.scatter(x_train7Arr, y_train7Arr, color='black', alpha=0.5)
-plt.plot(x_train7Arr, ridgeBTC.predict(x_train7), color='blue', linewidth=2)
-plt.show()
+plt.plot(x_train7Arr, clfBTC.predict(x_train7), color='blue', linewidth=2)
+#plt.show()
+
 print('Decision tree regressor score of ETH: ' + str((clfScoreETH * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test8, clfpredETH))
+plt.scatter(x_train8Arr, y_train8Arr, color='black', alpha=0.5)
+plt.plot(x_train8Arr, clfETH.predict(x_train8), color='blue', linewidth=2)
+#plt.show()
+
 print('Decision tree regressor score of LTC: ' + str((clfScoreLTC * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test9, clfpredLTC))
+plt.scatter(x_train9Arr, y_train9Arr, color='black', alpha=0.5)
+plt.plot(x_train9Arr, clfLTC.predict(x_train9), color='blue', linewidth=2)
+#plt.show()
 
+# predict all gpus from crpyto
 
+converted_data_crypto = reg_df[['btc_price', 'eth_price', 'ltc_price']].apply(lambda x: [x['btc_price'], x['eth_price'], x['ltc_price']], axis=1)
+cryptoArr = list(converted_data_crypto)
 
+x_train10, x_test10, y_train10, y_test10 = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
+regGPU = LinearRegression()
+regGPU.fit(x_train10, y_train10)
+regPredGPU = regGPU.predict(x_test10)
+regScoreGPU = regGPU.score(x_test10, y_test10)
+
+x_train11, x_test11, y_train11, y_test11 = train_test_split(cryptoArr, gpuArray, test_size=0.1, random_state=0)
+ridgeGPU = linear_model.Ridge(alpha=.5)
+ridgeGPU.fit(x_train11, y_train11)
+ridgePredGPU = ridgeGPU.predict(x_test11)
+ridgeScoreGPU = ridgeGPU.score(x_test11, y_test11)
+
+x_train12, x_test12, y_train12, y_test12 = train_test_split(cryptoArr, gpuArray, test_size=0.2, random_state=0)
+dtrGPU = tree.DecisionTreeRegressor()
+dtrGPU.fit(x_train12, y_train12)
+dtrPredGPU = dtrGPU.predict(x_test12)
+dtrScoreGPU = dtrGPU.score(x_test12, y_test12)
+
+print('Linear regression score of GPUs: ' + str((regScoreGPU * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test10, regPredGPU))
+
+print('Ridge regression of GPUs: ' + str((ridgeScoreGPU * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test11, ridgePredGPU))
+
+print('DTR score of GPUs: ' + str((dtrScoreGPU * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test12, dtrPredGPU))
+
+# predict certain gpu with crypto
+
+x_train13, x_test13, y_train13, y_test13 = train_test_split(cryptoArr, reg_df['titan_price'], test_size=0.25, random_state=0)
+regGPU2 = linear_model.Ridge(alpha=.5)
+regGPU2.fit(x_train13, y_train13)
+regPredGPU2 = regGPU2.predict(x_test13)
+regScoreGPU2 = regGPU2.score(x_test13, y_test13)
+
+print('')
+print('Linear regression score of one GPU: ' + str((regScoreGPU2 * 100)))
+print("Mean squared error: %.2f" % mean_squared_error(y_test13, regPredGPU2))
+#plt.scatter(x_train13, y_train13, color='black', alpha=0.5)
+#plt.plot(x_train13, regGPU2.predict(x_train13), color='blue', linewidth=2)
+#plt.show()
