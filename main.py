@@ -564,3 +564,4 @@ print("Mean squared error: %.2f" % mean_squared_error(y_test13, regPredGPU2))
 #plt.scatter(x_train13, y_train13, color='black', alpha=0.5)
 #plt.plot(x_train13, regGPU2.predict(x_train13), color='blue', linewidth=2)
 #plt.show()
+
